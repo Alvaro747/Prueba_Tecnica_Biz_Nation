@@ -1,0 +1,1 @@
+export  type SequelizeDialectType = 'mysql' | 'sqlite' | 'postgres' | 'mssql';
