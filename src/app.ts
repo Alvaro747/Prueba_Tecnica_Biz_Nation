@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import ExpressServer from "./server/expres-server";
+import Database from "./config/Database";
 
 const HOST: string = process.env.HOST || "localhost";
 const PORT: number = Number(process.env.POR) || 3000;
@@ -25,6 +26,9 @@ server.getExpress().use(cors());
 server.getExpress().use(bodyParser.json());
 
 try {
+  // create database connection
+  Database.getInstance();
+
   server.listen();
 } catch (error) {
   console.error(error);
