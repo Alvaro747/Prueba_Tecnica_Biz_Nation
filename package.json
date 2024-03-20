@@ -10,7 +10,7 @@
     "copy-template": "node copyTemplate.js",
     "migration:dev": "set NODE_ENV=development&&npx sequelize-cli db:migrate",
     "migration:prod": "set NODE_ENV=production&&npx sequelize-cli db:migrate",
-    "model:create": "npx sequelize-cli model:generate --name"
+    "seed:dev": "set NODE_ENV=development&&npx sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "",
