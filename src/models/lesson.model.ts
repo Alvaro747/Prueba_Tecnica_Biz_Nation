@@ -1,7 +1,7 @@
-import { DataTypes, Model } from "sequelize";
+import {DataTypes, Model} from "sequelize";
 
 import Database from "@/config/Database";
-import LessonProgressModel from "./progress-lesson.model";
+import {LessonProgressModel, CourseModel} from "./index";
 
 /* import LessonProgress from './LessonProgress'; */
 
@@ -17,10 +17,11 @@ LessonModel.init(
     description: DataTypes.TEXT,
     video: DataTypes.STRING,
   },
-  { sequelize, modelName: "lesson" }
+  {sequelize, modelName: "lesson", paranoid: true}
 );
 
 // Define relationships
+LessonModel.belongsTo(CourseModel);
 LessonModel.hasMany(LessonProgressModel);
 
 export default LessonModel;
