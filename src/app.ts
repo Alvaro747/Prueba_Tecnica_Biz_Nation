@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import swaggerUi from "swagger-ui-express";
 
 import ExpressServer from "./server/expres-server";
+import routes from "./routes";
 import swaggerSpec from "./swagger";
 import Database from "./config/Database";
 
@@ -37,7 +38,7 @@ async function main() {
     .use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // implement routes
-  server.getExpress().use("/api", require("./routes"));
+  server.getExpress().use("/api", routes);
 
   try {
     // create database connection
