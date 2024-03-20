@@ -22,4 +22,4 @@ CourseModel.init(
 /* // Define relationships
 CourseModel.hasMany(CourseProgress); */
 
-module.exports = CourseModel;
+export default CourseModel;

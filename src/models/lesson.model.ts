@@ -21,4 +21,4 @@ LessonModel.init(
 // Define relationships
 /* LessonModel.hasMany(LessonProgress); */
 
-module.exports = LessonModel;
+export default LessonModel;

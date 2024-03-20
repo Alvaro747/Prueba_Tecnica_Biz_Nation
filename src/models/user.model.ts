@@ -22,4 +22,4 @@ UserModel.init(
 /* User.hasMany(CourseProgress);
 User.hasMany(LessonProgress); */
 
-module.exports = UserModel;
+export default UserModel;
