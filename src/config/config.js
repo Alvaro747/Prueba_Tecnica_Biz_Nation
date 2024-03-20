@@ -8,7 +8,7 @@ const getEnvFile = (path) => {
     case "production":
       return ".env";
     default:
-      return ".env";
+      return ".env.development";
   }
 };
 
