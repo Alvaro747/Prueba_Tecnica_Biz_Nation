@@ -13,7 +13,7 @@ LessonProgressModel.init(
   {
     status: DataTypes.ENUM("pending", "in_progress", "completed"),
   },
-  {sequelize, modelName: "lesson_progress"}
+  {sequelize, modelName: "lesson_progress", paranoid: true}
 );
 
 // Define relationships

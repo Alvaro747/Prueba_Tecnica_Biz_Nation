@@ -17,7 +17,7 @@ UserModel.init(
     password: DataTypes.STRING,
     role: DataTypes.ENUM("admin", "student"),
   },
-  {sequelize, modelName: "user"}
+  {sequelize, modelName: "user", paranoid: true}
 );
 
 // Define relationships

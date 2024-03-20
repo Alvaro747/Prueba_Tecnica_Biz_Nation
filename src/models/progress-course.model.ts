@@ -14,7 +14,7 @@ CourseProgressModel.init(
     status: DataTypes.ENUM("pending", "in_progress", "completed"),
     approvalDate: DataTypes.DATE,
   },
-  {sequelize, modelName: "course_progress"}
+  {sequelize, modelName: "course_progress", paranoid: true}
 );
 
 // Define relationships
