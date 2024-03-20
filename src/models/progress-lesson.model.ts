@@ -1,8 +1,7 @@
-import { DataTypes, Model } from "sequelize";
+import {DataTypes, Model} from "sequelize";
 
 import Database from "@/config/Database";
-import UserModel from "./user.model";
-import LessonModel from "./lesson.model";
+import {UserModel, LessonModel} from "./index";
 
 // Get sequelize from singleton instance from Database
 const sequelize = Database.getInstance().getSequelize();
@@ -14,7 +13,7 @@ LessonProgressModel.init(
   {
     status: DataTypes.ENUM("pending", "in_progress", "completed"),
   },
-  { sequelize, modelName: "lesson_progress" }
+  {sequelize, modelName: "lesson_progress"}
 );
 
 // Define relationships

@@ -1,8 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 
 import Database from "@/config/Database";
-import CourseProgressModel from "./progress-course.model";
-import LessonProgressModel from "./progress-lesson.model";
+import {CourseProgressModel, LessonProgressModel} from "./index";
 
 // Get sequelize from singleton instance from Database
 const sequelize = Database.getInstance().getSequelize();
