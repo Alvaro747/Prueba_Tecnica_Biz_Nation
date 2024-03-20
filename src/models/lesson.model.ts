@@ -1,5 +1,7 @@
-import Database from "@/config/Database";
 import { DataTypes, Model } from "sequelize";
+
+import Database from "@/config/Database";
+import LessonProgressModel from "./progress-lesson.model";
 
 /* import LessonProgress from './LessonProgress'; */
 
@@ -19,6 +21,6 @@ LessonModel.init(
 );
 
 // Define relationships
-/* LessonModel.hasMany(LessonProgress); */
+LessonModel.hasMany(LessonProgressModel);
 
 export default LessonModel;

@@ -1,5 +1,8 @@
 import {DataTypes, Model} from "sequelize";
+
 import Database from "@/config/Database";
+import CourseProgressModel from "./progress-course.model";
+import LessonProgressModel from "./progress-lesson.model";
 
 // Get sequelize from singleton instance from Database
 const sequelize = Database.getInstance().getSequelize();
@@ -19,7 +22,7 @@ UserModel.init(
 );
 
 // Define relationships
-/* User.hasMany(CourseProgress);
-User.hasMany(LessonProgress); */
+UserModel.hasMany(CourseProgressModel);
+UserModel.hasMany(LessonProgressModel);
 
 export default UserModel;

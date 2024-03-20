@@ -1,6 +1,7 @@
-import { DataTypes, Model } from "sequelize";
+import {DataTypes, Model} from "sequelize";
+
 import Database from "@/config/Database";
-/* import CourseProgress from "./CourseProgress"; */
+import CourseProgressModel from "./progress-course.model";
 
 // Get sequelize from singleton instance from Database
 const sequelize = Database.getInstance().getSequelize();
@@ -16,10 +17,10 @@ CourseModel.init(
     publicationDate: DataTypes.DATE,
     introductoryVideo: DataTypes.STRING,
   },
-  { sequelize, modelName: "course" }
+  {sequelize, modelName: "course"}
 );
 
-/* // Define relationships
-CourseModel.hasMany(CourseProgress); */
+// Define relationships
+CourseModel.hasMany(CourseProgressModel);
 
 export default CourseModel;
