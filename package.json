@@ -6,8 +6,7 @@
   "scripts": {
     "start:dev": "set NODE_ENV=development&&ts-node src/app.ts",
     "start:prod": "node dist/app.js",
-    "build": "tsc && npm run copy-template",
-    "copy-template": "node copyTemplate.js",
+    "build": "tsc",
     "migration:dev": "set NODE_ENV=development&&npx sequelize-cli db:migrate",
     "migration:prod": "set NODE_ENV=production&&npx sequelize-cli db:migrate",
     "seed:dev": "set NODE_ENV=development&&npx sequelize-cli db:seed:all"
