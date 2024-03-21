@@ -1,6 +1,6 @@
 import jwt, {Secret} from "jsonwebtoken";
 
-import repository from "../../models";
+import Repository from "../../models";
 import {
   ILoginResponse,
   IRegistrationResponse,
@@ -19,7 +19,7 @@ import {PayloadTokenType} from "../../types/payload-token.type";
 export default class AuthService {
   static async login(data: IUserLogin) {
     try {
-      const validateUser = await repository.UserModel.findOne({
+      const validateUser = await Repository.UserModel.findOne({
         where: {email: data.email},
       });
       if (!validateUser) {
@@ -68,7 +68,7 @@ export default class AuthService {
     data.password = encryptedPassword;
 
     try {
-      const response = await repository.UserModel.create(data);
+      const response = await Repository.UserModel.create(data);
       const user: IRegistrationResponse = new RegistrationResponseDto(
         response?.dataValues
       )?.getAtributes();
