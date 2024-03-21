@@ -1,5 +1,7 @@
-import { UserRole } from '@/enums/user-role.enum';
-import { IsString, IsEmail, IsEnum, IsDate } from 'class-validator';
+import {IsString, IsEmail, IsEnum, IsDate} from "class-validator";
+
+import {UserRole} from "../../enums/user-role.enum";
+import { IUserRegister } from "../../interfaces/index";
 
 
 export default class UserRegisterDto {
@@ -18,7 +20,10 @@ export default class UserRegisterDto {
   @IsEnum(UserRole)
   role: UserRole;
 
-  constructor(fullName: string, dateOfBirth: Date, email: string, password: string, role: UserRole) {
+  constructor(userCreateData: IUserRegister) {
+
+    const {fullName, dateOfBirth, email, password, role} = userCreateData;
+
     this.fullName = fullName;
     this.dateOfBirth = dateOfBirth;
     this.email = email;
