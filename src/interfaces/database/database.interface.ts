@@ -1,4 +1,4 @@
-import { SequelizeDialectType } from "@/types/sequelize-dialect.type";
+import { SequelizeDialectType } from "../../types/sequelize-dialect.type";
 
 export default interface IDatabase {
     dbName: string;
