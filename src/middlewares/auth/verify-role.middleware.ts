@@ -1,13 +1,13 @@
 import {Request, Response, NextFunction} from "express";
 
 import {UserRole} from "../../enums/user-role.enum";
-import {IResponseHttp} from "../../interfaces/index";
+import {IRequestUserData, IResponseHttp} from "../../interfaces/index";
 import {createResponseHttp} from "../../utils/create-response-http";
 
 export default function VerifyUserRoleMiddleware(allowedRoles: UserRole[]) {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: IRequestUserData, res: Response, next: NextFunction) => {
     // varify if the user has a role and if it's allowed
-    const userRole = req.body.role as UserRole;
+    const userRole = req?.userData?.role as UserRole;
 
     if (!userRole || !allowedRoles.includes(userRole)) {
       const response: IResponseHttp<null> = createResponseHttp<null>(

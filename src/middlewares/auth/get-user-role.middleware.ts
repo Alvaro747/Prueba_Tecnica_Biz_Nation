@@ -1,17 +1,17 @@
 import {Request, Response, NextFunction} from "express";
 
 import Repository from "../../models";
-import {IResponseHttp} from "../../interfaces/index";
+import {IRequestUserData, IResponseHttp} from "../../interfaces/index";
 import {createResponseHttp} from "../../utils/create-response-http";
 
 export default async function getUserRoleByEmailMiddleware(
-  req: Request,
+  req: IRequestUserData,
   res: Response,
   next: NextFunction
 ) {
   try {
     const user = await Repository.UserModel.findOne({
-      where: {email: req.body.email},
+      where: {email: req?.userData?.email},
       attributes: {exclude: ["password"]},
     });
 
@@ -25,8 +25,10 @@ export default async function getUserRoleByEmailMiddleware(
       return res.status(response.status).json(response);
     }
 
-    // save the user into req.body to use it in the next middleware
-    req.body = user.dataValues;
+    // save the user into req.userData to use it in the next middleware
+    req.userData = {
+      ...user.dataValues,
+    };
     next();
   } catch (error) {
     const response: IResponseHttp<null> = createResponseHttp<null>(

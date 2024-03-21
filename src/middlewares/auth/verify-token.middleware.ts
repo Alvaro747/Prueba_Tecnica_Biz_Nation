@@ -1,11 +1,15 @@
 import {Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
 
-import {IDecodedToken, IResponseHttp} from "../../interfaces/index";
+import {
+  IDecodedToken,
+  IRequestUserData,
+  IResponseHttp,
+} from "../../interfaces/index";
 import {createResponseHttp} from "../../utils/create-response-http";
 
 export default function verifyTokenMiddleware(
-  req: Request,
+  req: IRequestUserData,
   res: Response,
   next: NextFunction
 ) {
@@ -30,8 +34,8 @@ export default function verifyTokenMiddleware(
       process.env.JWT_SECRET as string
     ) as IDecodedToken;
 
-    // save the email into req.body to use it in the next middleware
-    req.body = {
+    // save the email into req.userData to use it in the next middleware
+    req.userData = {
       email: decoded.email,
     };
     next();
