@@ -32,7 +32,13 @@ router.get("/:id", (req, res) => {
   // Aquí iría la lógica para obtener un elemento por su ID
 });
 
-router.post("/add-lessons", CourseController.addLessons);
+router.post(
+  "/add-lessons",
+  verifyTokenMiddleware,
+  getUserRoleByEmailMiddleware,
+  VerifyUserRoleMiddleware([UserRole.ADMIN]),
+  CourseController.addLessons
+);
 
 // Operación UPDATE
 router.patch(
