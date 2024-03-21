@@ -6,6 +6,11 @@ import IUserRegister from "./auth/register-user.interface";
 import IRegistrationResponse from "./auth/response-register.interface";
 import ILoginResponse from "./auth/response-login.interface";
 
+import ICourseModel from "./entities/course-model.interface";
+import ICourseProgressModel from "./entities/course-progress-model.interface";
+import ILessonProgressModel from "./entities/lesson-progress-model.interface";
+import ILessonModel from "./entities/lesson-model.interface";
+
 export {
   IExpress,
   IDatabase,
@@ -14,4 +19,9 @@ export {
   IUserRegister,
   IRegistrationResponse,
   ILoginResponse,
+
+  ICourseModel,
+  ICourseProgressModel,
+  ILessonProgressModel,
+  ILessonModel
 };
