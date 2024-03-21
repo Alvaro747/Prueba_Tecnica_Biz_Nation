@@ -1,3 +1,4 @@
+import {Sequelize, Op} from "sequelize";
 import Repository from "../../models";
 import {
   IAddLessons,
@@ -70,12 +71,63 @@ export default class CourseService {
     }
   }
 
-  static async read() {
+  static async getCoursesList({
+    limit,
+    page,
+    title,
+    startDate,
+    endDate,
+    status,
+    userData,
+  }: any) {
     try {
-      const response = await Repository.UserModel.find();
-      return response; // Puedes retornar lo que necesites aquí
-    } catch (error: any) {
-      throw error; // Maneja el error según sea necesario
+      const offset = (page - 1) * limit;
+
+      let whereClause = {} as any;
+      if (title) {
+        whereClause.title = {[Op.like]: `%${title}%`};
+      }
+      if (startDate && endDate) {
+        whereClause.publicationDate = {
+          [Op.between]: [new Date(startDate), new Date(endDate)],
+        };
+      }
+
+      let courseProgressWhereClause = {};
+      if (userData.role === "student" && status) {
+        courseProgressWhereClause = {
+          userId: userData.id,
+          status: status,
+        };
+      }
+
+      const courses = await Repository.CourseModel.findAll({
+        where: whereClause,
+        include: [
+          {
+            model: Repository.LessonModel,
+            as: "lessons",
+          },
+          {
+            model: Repository.CourseProgressModel,
+            as: "courseProgress",
+            where: courseProgressWhereClause,
+            required: false,
+          },
+        ],
+        limit: parseInt(limit),
+        offset: offset,
+      });
+
+      return createResponseHttp<ICourseCreate[]>(
+        201,
+        "courses found",
+        true,
+        courses
+      );
+    } catch (error) {
+      console.error("Error getting courses list:", error);
+      throw error;
     }
   }
 
