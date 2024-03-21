@@ -1,6 +1,6 @@
 import express from "express";
 
-import {IExpress} from "@/interfaces/index";
+import {IExpress} from "../interfaces/index";
 
 class ExpressServer implements IExpress<express.Express> {
   private express: express.Express;
