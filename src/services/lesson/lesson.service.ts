@@ -1,6 +1,8 @@
 import Repository from "../../models";
 import {createResponseHttp} from "../../utils/create-response-http";
 import {ILessonCreate} from "../../interfaces/index";
+import LessonProgressService from "../lesson-progress/lesson-progress.service";
+import isValidateResponse from "../../utils/validate.responses";
 
 export default class LessonService {
   static async create(data: ILessonCreate | ILessonCreate[]) {
@@ -83,20 +85,29 @@ export default class LessonService {
     }
   }
 
-  static async delete(lessonId: string) {
+  static async delete(id: number) {
     try {
-      // Verificar si la lección tiene progreso
-      const hasProgress = await Repository.ProgressModel.exists({lessonId});
-      if (hasProgress) {
-        throw new Error(
-          "No se puede eliminar la lección porque tiene progreso asociado."
+      const findCourseProgress =
+        await LessonProgressService.findLessonCourseByLessonId(id);
+
+      if (isValidateResponse(findCourseProgress)) {
+        return createResponseHttp<null>(
+          400,
+          "Error deleting lesson, lesson has progress",
+          false,
+          null
         );
       }
+      await Repository.LessonModel.destroy({
+        where: {id},
+      });
 
-      // Eliminación "soft" de la lección
-      await Repository.LessonModel.destroy({where: {id: lessonId}});
-
-      return {message: "Lección eliminada exitosamente"};
+      return createResponseHttp<null>(
+        201,
+        "lesson deleted successfully",
+        true,
+        null
+      );
     } catch (error: any) {
       throw error;
     }
