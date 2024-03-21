@@ -33,9 +33,9 @@ async function main() {
   server.getExpress().use(bodyParser.json());
 
   // implement swagger documentation
-  server
+/*   server
     .getExpress()
-    .use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    .use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)); */
 
   // implement routes
   server.getExpress().use("/api", routes);
