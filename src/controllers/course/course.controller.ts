@@ -12,6 +12,11 @@ export default class CourseController {
     res.status(response?.status || 201).json(response);
   }
 
+  static async addLessons(req: Request, res: Response) {
+    const response = await CourseService.addLessons(req.body);
+    res.status(response?.status || 201).json(response);
+  }
+
   static async update(req: Request, res: Response) {
     const {id} = req.params;
     const idNumber = parseInt(id as string);
