@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
-import {CourseService} from "../../services/index";
+import {CourseService, LessonService} from "../../services/index";
+import {isValidateResponse} from "@/utils";
 
 export default class CourseController {
   static async create(req: Request, res: Response) {
@@ -25,7 +26,31 @@ export default class CourseController {
   }
 
   static async delete(req: Request, res: Response) {
-    const response = await CourseService.create(req.body);
-    res.status(response?.status || 201).json(response);
+    const {courseId, lessonId} = req.query;
+    let response = [];
+
+    if (!courseId && !lessonId) {
+      res.status(400).json({
+        error: "Debe proporcionar un courseId o un lessonId",
+        result: null,
+        success: false,
+      });
+    }
+    if (courseId) {
+      const idNumber = parseInt(courseId as string);
+      const responseCourse = await CourseService.delete(idNumber);
+      if (!isValidateResponse(responseCourse)) {
+        return res.status(responseCourse?.status || 201).json(responseCourse);
+      }
+      response.push(responseCourse.result);
+    }
+/* 
+    if (lessonId) {
+      const idNumber = parseInt(lessonId as string);
+      response = await LessonService.delete(idNumber);
+      res.status(response?.status || 201).json(response);
+    }
+
+    return res.status(response?.status || 201).json(response); */
   }
 }

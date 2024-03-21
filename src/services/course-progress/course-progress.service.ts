@@ -8,9 +8,8 @@ import {
 import {createResponseHttp} from "../../utils/create-response-http";
 import LessonService from "../lesson/lesson.service";
 import isValidateResponse from "../../utils/validate.responses";
-import CourseProgressService from "../course-progress/course-progress.service";
 
-export default class CourseService {
+export default class CourseProgressService {
   static async create(data: ICourseCreate) {
     try {
       const response = await Repository.CourseModel.create(data);
@@ -144,77 +143,53 @@ export default class CourseService {
     }
   }
 
-  static async addLessons(data: IAddLessons) {
+  static async findProgressCourseByCourseId(courseId: number) {
     try {
-      let lessonsCreated: ILessonCreate[] = [] as ILessonCreate[];
-      // Iterar sobre el array de datos
-      for (const lesson of data.addLessons) {
-        const id = lesson.courseId as number;
-        delete lesson.id;
+      const response = await Repository.CourseProgressModel.findAll({
+        where: {courseId},
+      });
 
-        if (!id) {
-          return createResponseHttp<null>(
-            400,
-            "Error adding lessons, courseId is required",
-            false,
-            null
-          );
-        }
-      }
-
-      const lessonResponse = (await LessonService.create(
-        data.addLessons
-      )) as IResponseHttp<ILessonCreate[] | null>;
-
-      if (!isValidateResponse(lessonResponse)) {
-        return lessonResponse;
-      }
-
-      lessonsCreated = lessonResponse.result as ILessonCreate[];
-
-      // Puedes retornar lo que necesites aquí
-      const response: Partial<ICourseCreate> = {
-        lessonsAssociated: lessonsCreated,
-      };
-
-      return createResponseHttp<Partial<ICourseCreate>>(
-        201,
-        "course and lessons created successfully",
-        true,
-        response
-      );
-    } catch (error: any) {
-      // Maneja el error según sea necesario
-      throw error;
-    }
-  }
-
-  static async delete(id: number) {
-    try {
-      const findCourseProgress =
-        await CourseProgressService.findProgressCourseByCourseId(id);
-
-      if (isValidateResponse(findCourseProgress)) {
+      if (!response || response.length === 0) {
         return createResponseHttp<null>(
           400,
-          "Error deleting course, course has progress",
+          "Error finding progress course",
           false,
           null
         );
       }
-      await Repository.CourseModel.destroy({
-        where: {id},
-      });
-
-      return createResponseHttp<null>(
+      return createResponseHttp<ICourseCreate>(
         201,
-        "course deleted successfully",
+        "Progres course find successfully",
         true,
-        null
+        response
       );
     } catch (error: any) {
-      return createResponseHttp<null>(500, error.message, false, null);
+      throw error; // Maneja el error según sea necesario
     }
+  }
+
+  static async delete(id: number) {
+    /* try {
+      // Verificar si la lección tiene progreso
+      const hasProgress = await Repository.ProgressModel.exists({lessonId});
+      if (hasProgress) {
+        throw new Error(
+          "No se puede eliminar la lección porque tiene progreso asociado."
+        );
+      }
+
+      // Eliminación "soft" de la lección
+      await Repository.LessonModel.destroy({where: {id: lessonId}});
+
+      return createResponseHttp<ICourseCreate>(
+        201,
+        "course updated successfully",
+        true,
+        hasProgress
+      );
+    } catch (error: any) {
+      throw error;
+    } */
   }
 
   private static IsvalidationIdLesson(
