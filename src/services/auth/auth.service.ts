@@ -1,4 +1,4 @@
-import IResponseHttp from "@/interfaces/responses/response-http.interface";
+import {IResponseHttp} from "../../interfaces/index";
 import {validate} from "class-validator";
 /**
  * Service class for handling auth operations such as register and login
