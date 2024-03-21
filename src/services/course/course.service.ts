@@ -70,6 +70,9 @@ export default class CourseService {
 
   static async update(id: number, data: Partial<ICourseCreate>) {
     try {
+      let updatedCourse = {
+        dataValues: {},
+      };
       const lessonUpdated: ILessonCreate[] = [];
       const lessonsAssociated = data.lessonsAssociated as ILessonCreate[];
 
@@ -95,8 +98,8 @@ export default class CourseService {
           lessonUpdated.push(lessonResponse.result as ILessonCreate);
         }
       }
-      const updateCourse = await Repository.CourseModel.update(
-        {data},
+      const [numberOfAffectedRows] = await Repository.CourseModel.update(
+        data,
         {
           where: {
             id,
@@ -104,8 +107,23 @@ export default class CourseService {
         }
       );
 
+      if (!numberOfAffectedRows) {
+        return createResponseHttp<null>(
+          400,
+          "Error updating course",
+          false,
+          null
+        );
+      }
+
+      if (numberOfAffectedRows > 0) {
+        // Si la actualización tuvo éxito, obtener el registro actualizado
+        updatedCourse = await Repository.CourseModel.findOne({
+          where: {id},
+        });
+      }
       const response: Partial<ICourseCreate> = {
-        ...updateCourse,
+        ...updatedCourse.dataValues,
         lessonsAssociated: lessonUpdated,
       };
       return createResponseHttp<ICourseCreate>(
