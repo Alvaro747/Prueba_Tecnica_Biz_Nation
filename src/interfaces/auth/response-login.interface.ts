@@ -1,9 +1,8 @@
 import {UserRole} from "../../enums/user-role.enum";
 
-export default interface IUserRegister {
+export default interface ILoginResponse {
   fullName: string;
-  dateOfBirth: Date;
   email: string;
-  password: string;
   role: UserRole;
+  token: string;
 }
