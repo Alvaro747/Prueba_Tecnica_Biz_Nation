@@ -36,6 +36,7 @@ export default (sequelize: Sequelize, DataTypes: any) => {
     {
       sequelize,
       modelName: "LessonProgressModel",
+      paranoid: true,
     }
   );
 
