@@ -1,4 +1,7 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IUserLogin } from "../../interfaces/index";
+import {IsEmail, IsString} from "class-validator";
+
+
 
 export default class UserLoginDto {
   @IsEmail()
@@ -7,7 +10,10 @@ export default class UserLoginDto {
   @IsString()
   password: string;
 
-  constructor(email: string, password: string) {
+  constructor(userLoginData: IUserLogin) {
+
+    const {email, password} = userLoginData;
+
     this.email = email;
     this.password = password;
   }
