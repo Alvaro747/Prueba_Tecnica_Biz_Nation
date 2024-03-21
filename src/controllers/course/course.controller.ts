@@ -1,6 +1,8 @@
 import {Request, Response} from "express";
 import {CourseService, LessonService} from "../../services/index";
 import isValidateResponse from "../../utils/validate.responses";
+import {IRequestUserData} from "../../interfaces/index";
+import {UserRole} from "../../enums/user-role.enum";
 
 export default class CourseController {
   static async create(req: Request, res: Response) {
@@ -56,5 +58,15 @@ export default class CourseController {
     return res
       .status(201)
       .json({response: null, message: "Deleted successfully.", success: true});
+  }
+
+  static async detail(req: IRequestUserData, res: Response) {
+    const {id} = req.params;
+    const idNumber = parseInt(id as string);
+    const response = await CourseService.detail(
+      idNumber,
+      req?.userData?.role as UserRole
+    );
+    res.status(response?.status || 201).json(response);
   }
 }

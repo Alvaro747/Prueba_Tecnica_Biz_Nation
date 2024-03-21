@@ -9,6 +9,7 @@ import {createResponseHttp} from "../../utils/create-response-http";
 import LessonService from "../lesson/lesson.service";
 import isValidateResponse from "../../utils/validate.responses";
 import CourseProgressService from "../course-progress/course-progress.service";
+import {UserRole} from "../../enums/user-role.enum";
 
 export default class CourseService {
   static async create(data: ICourseCreate) {
@@ -75,6 +76,35 @@ export default class CourseService {
       return response; // Puedes retornar lo que necesites aquí
     } catch (error: any) {
       throw error; // Maneja el error según sea necesario
+    }
+  }
+
+  static async detail(id: number, role: UserRole) {
+    try {
+      const course = await Repository.CourseModel.findOne({
+        where: {id},
+        paranoid: role === "admin" ? false : true,
+        include: [
+          {
+            model: Repository.LessonModel,
+            as: "lessons",
+            paranoid: false,
+          },
+        ],
+      });
+
+      if (!course) {
+        return createResponseHttp<null>(404, "course not found", false, null);
+      }
+
+      return createResponseHttp<ICourseCreate>(
+        200,
+        "course found",
+        true,
+        course
+      );
+    } catch (error: any) {
+      return createResponseHttp<null>(500, error.message, false, null);
     }
   }
 

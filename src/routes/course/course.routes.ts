@@ -32,6 +32,15 @@ router.get("/:id", (req, res) => {
   // Aquí iría la lógica para obtener un elemento por su ID
 });
 
+// Operación READ (obtener todos los elementos)
+router.get(
+  "/detail/:id",
+  verifyTokenMiddleware,
+  getUserRoleByEmailMiddleware,
+  VerifyUserRoleMiddleware([UserRole.ADMIN, UserRole.STUDENT]),
+  CourseController.detail
+);
+
 router.post(
   "/add-lessons",
   verifyTokenMiddleware,
