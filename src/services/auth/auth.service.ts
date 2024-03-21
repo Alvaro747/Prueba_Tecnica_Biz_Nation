@@ -1,5 +1,13 @@
-import {IResponseHttp} from "../../interfaces/index";
-import {validate} from "class-validator";
+import repository from "../../models";
+
+import {
+  IRegistrationResponse,
+  IResponseHttp,
+  IUserRegister,
+} from "../../interfaces/index";
+import {encryptPassword} from "../../utils/generator.util";
+import {createResponseHttp} from "../../utils/create-response-http";
+import {RegistrationResponseDto} from "../../dtos/index";
 /**
  * Service class for handling auth operations such as register and login
  */
@@ -8,29 +16,32 @@ export default class AuthService {
     return {status: 200, message: "Login successful"};
   }
 
-  static async register(data: any) {
-    return {status: 201, message: "User created"};
-  }
+  static async register(
+    data: IUserRegister
+  ): Promise<IResponseHttp<IRegistrationResponse>> {
+    const encryptedPassword = await encryptPassword(data.password);
+    data.password = encryptedPassword;
 
-  private static async validateDto(dto: any): Promise<IResponseHttp<any>> {
-    const validationErrors = await validate(dto);
-    if (validationErrors.length > 0) {
-      const errorMessages = validationErrors.map((error) => {
-        return {
-          property: error.property,
-          constraints: error.constraints,
-        };
-      }) as any;
-      return {
-        success: false,
-        status: 400,
-        result: errorMessages,
-      };
+    try {
+      const response = await repository.UserModel.create(data);
+      const user: IRegistrationResponse = new RegistrationResponseDto(
+        response?.dataValues
+      )?.getAtributes();
+
+      return createResponseHttp<IRegistrationResponse>(
+        201,
+        "User registered successfully",
+        true,
+        user
+      );
+    } catch (error: any) {
+      const messagesError = error.errors.map((err: any) => err.message);
+      return createResponseHttp<IRegistrationResponse>(
+        500,
+        error.message,
+        false,
+        messagesError
+      );
     }
-    return {
-      success: true,
-      status: 200,
-      result: dto,
-    };
   }
 }
