@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {AuthService} from "@/services/index";
+import {AuthService} from "../../services/index";
 
 export default class AuthController {
   static async login(req: Request, res: Response) {
