@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 
 import ExpressServer from "./server/expres-server";
 import routes from "./routes";
-import swaggerSpec from "./swagger";
+import swaggerSpec from "./swagger/swagger";
 import Database from "./config/Database";
 
 // get host and port from enviroments variables
@@ -33,9 +33,9 @@ async function main() {
   server.getExpress().use(bodyParser.json());
 
   // implement swagger documentation
-/*   server
+  server
     .getExpress()
-    .use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec)); */
+    .use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // implement routes
   server.getExpress().use("/api", routes);
