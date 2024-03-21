@@ -1,12 +1,8 @@
 import { ICourseModel } from "../interfaces/index";
-import {Model, Sequelize} from "sequelize";
-
+import { Model, Sequelize } from "sequelize";
 
 export default (sequelize: Sequelize, DataTypes: any) => {
-  class CourseModel
-    extends Model<ICourseModel>
-    implements ICourseModel
-  {
+  class CourseModel extends Model<ICourseModel> implements ICourseModel {
     public logo!: string;
     public title!: string;
     public description!: string;
@@ -14,16 +10,16 @@ export default (sequelize: Sequelize, DataTypes: any) => {
     public introductoryVideo!: string;
 
     static associate(models: any): void {
-      // Relación uno a muchos con LessonModel
+      // One-to-many relationship with LessonModel
       this.hasMany(models.LessonModel, {
         foreignKey: "courseId",
-        as: "lessons", // Nombre opcional para la asociación
+        as: "lessons", // Optional name for the association
       });
 
-      // Relación uno a muchos con CourseProgressModel
+      // One-to-many relationship with CourseProgressModel
       this.hasMany(models.CourseProgressModel, {
         foreignKey: "courseId",
-        as: "courseProgresses", // Nombre opcional para la asociación
+        as: "courseProgresses", // Optional name for the association
       });
     }
   }

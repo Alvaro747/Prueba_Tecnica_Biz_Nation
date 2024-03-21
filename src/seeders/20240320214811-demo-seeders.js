@@ -28,10 +28,10 @@ module.exports = {
       ],
       {}
     );
-    // Obtener los IDs de los usuarios recién insertados
+    // Get IDs of newly inserted users
     const users = await queryInterface.sequelize.query(
       "SELECT id FROM UserModels",
-      {type: Sequelize.QueryTypes.SELECT}
+      { type: Sequelize.QueryTypes.SELECT }
     );
     const userIds = users.map((user) => user);
 
@@ -42,8 +42,7 @@ module.exports = {
         {
           logo: "https://example.com/logo1.png",
           title: "Introduction to Programming",
-          description:
-            "A beginner-friendly course on programming fundamentals.",
+          description: "A beginner-friendly course on programming fundamentals.",
           publicationDate: new Date(),
           introductoryVideo: "https://example.com/intro1.mp4",
           createdAt: new Date(),
@@ -61,10 +60,10 @@ module.exports = {
       ],
       {}
     );
-    // Obtener los IDs de los usuarios recién insertados
+    // Get IDs of newly inserted courses
     const courses = await queryInterface.sequelize.query(
       "SELECT id FROM CourseModels",
-      {type: Sequelize.QueryTypes.SELECT}
+      { type: Sequelize.QueryTypes.SELECT }
     );
     const coursesIds = courses.map((course) => course);
 
@@ -89,12 +88,12 @@ module.exports = {
           updatedAt: new Date(),
         },
       ],
-      {returning: true}
+      { returning: true }
     );
-    // Obtener los IDs de los usuarios recién insertados
+    // Get IDs of newly inserted lessons
     const lessons = await queryInterface.sequelize.query(
       "SELECT id FROM LessonModels",
-      {type: Sequelize.QueryTypes.SELECT}
+      { type: Sequelize.QueryTypes.SELECT }
     );
     const lessonsIds = lessons.map((lesson) => lesson);
 
@@ -113,14 +112,14 @@ module.exports = {
       {}
     );
 
-    // Insertar progreso de la lección
+    // Insert lesson progress
     await queryInterface.bulkInsert(
       "LessonProgressModels",
       [
         {
           status: "in_progress",
-          userId: userIds[0].id, // ID del primer usuario creado
-          lessonId: lessonsIds[0].id, // ID de la primera lección creada
+          userId: userIds[0].id, // ID of the first created user
+          lessonId: lessonsIds[0].id, // ID of the first created lesson
           createdAt: new Date(),
           updatedAt: new Date(),
         },

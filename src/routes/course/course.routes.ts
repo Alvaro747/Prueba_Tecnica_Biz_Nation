@@ -1,18 +1,18 @@
 import express from "express";
-import {UserRole} from "../../enums/user-role.enum";
+import { UserRole } from "../../enums/user-role.enum";
 import {
   getUserRoleByEmailMiddleware,
   validationBodyMiddleware,
   verifyTokenMiddleware,
   VerifyUserRoleMiddleware,
 } from "../../middlewares/index";
-import {ICourseCreate} from "../../interfaces/index";
-import {CourseCreateDto} from "../../dtos/index";
-import {CourseController} from "../../controllers/index";
+import { ICourseCreate } from "../../interfaces/index";
+import { CourseCreateDto } from "../../dtos/index";
+import { CourseController } from "../../controllers/index";
 
 const router = express.Router();
 
-// Operación CREATE
+// CREATE Operation
 router.post(
   "/create",
   verifyTokenMiddleware,
@@ -22,7 +22,7 @@ router.post(
   CourseController.create
 );
 
-// Operación READ (obtener un elemento específico por su ID, por ejemplo)
+// READ Operation (get a specific item by its ID, for example)
 router.get(
   "/",
   verifyTokenMiddleware,
@@ -31,7 +31,7 @@ router.get(
   CourseController.getCoursesList
 );
 
-// Operación READ (obtener por id)
+// READ Operation (get by id)
 router.get(
   "/detail/:id",
   verifyTokenMiddleware,
@@ -48,7 +48,7 @@ router.post(
   CourseController.addLessons
 );
 
-// Operación UPDATE
+// UPDATE Operation
 router.patch(
   "/:id",
   verifyTokenMiddleware,
@@ -57,7 +57,7 @@ router.patch(
   CourseController.update
 );
 
-// Operación DELETE
+// DELETE Operation
 router.delete(
   "/",
   verifyTokenMiddleware,
