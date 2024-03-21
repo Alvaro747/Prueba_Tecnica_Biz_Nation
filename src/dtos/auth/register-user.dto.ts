@@ -25,7 +25,7 @@ export default class UserRegisterDto {
     const {fullName, dateOfBirth, email, password, role} = userCreateData;
 
     this.fullName = fullName;
-    this.dateOfBirth = dateOfBirth;
+    this.dateOfBirth = new Date(dateOfBirth);
     this.email = email;
     this.password = password;
     this.role = role;
