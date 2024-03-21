@@ -22,17 +22,16 @@ router.post(
   CourseController.create
 );
 
-// Operación READ (obtener todos los elementos)
-router.get("/", (req, res) => {
-  // Aquí iría la lógica para obtener todos los elementos
-});
-
 // Operación READ (obtener un elemento específico por su ID, por ejemplo)
-router.get("/:id", (req, res) => {
-  // Aquí iría la lógica para obtener un elemento por su ID
-});
+router.get(
+  "/",
+  verifyTokenMiddleware,
+  getUserRoleByEmailMiddleware,
+  VerifyUserRoleMiddleware([UserRole.ADMIN, UserRole.STUDENT]),
+  CourseController.getCoursesList
+);
 
-// Operación READ (obtener todos los elementos)
+// Operación READ (obtener por id)
 router.get(
   "/detail/:id",
   verifyTokenMiddleware,

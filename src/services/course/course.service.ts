@@ -110,7 +110,7 @@ export default class CourseService {
           },
           {
             model: Repository.CourseProgressModel,
-            as: "courseProgress",
+            as: "courseProgresses",
             where: courseProgressWhereClause,
             required: false,
           },

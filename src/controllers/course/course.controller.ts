@@ -10,8 +10,17 @@ export default class CourseController {
     res.status(response?.status || 201).json(response);
   }
 
-  static async read(req: Request, res: Response) {
-    const response = await CourseService.create(req.body);
+  static async getCoursesList(req: IRequestUserData, res: Response) {
+    const {limit, page, title, startDate, endDate, status} = req.query;
+    const response = await CourseService.getCoursesList({
+      limit,
+      page,
+      title,
+      startDate,
+      endDate,
+      status,
+      userData: req?.userData,
+    });
     res.status(response?.status || 201).json(response);
   }
 
