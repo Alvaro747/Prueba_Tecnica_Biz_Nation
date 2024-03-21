@@ -206,7 +206,6 @@ export default class CourseService {
       }
 
       if (numberOfAffectedRows > 0) {
-        // Si la actualización tuvo éxito, obtener el registro actualizado
         updatedCourse = await Repository.CourseModel.findOne({
           where: {id},
         });
@@ -229,7 +228,6 @@ export default class CourseService {
   static async addLessons(data: IAddLessons) {
     try {
       let lessonsCreated: ILessonCreate[] = [] as ILessonCreate[];
-      // Iterar sobre el array de datos
       for (const lesson of data.addLessons) {
         const id = lesson.courseId as number;
         delete lesson.id;
@@ -254,7 +252,6 @@ export default class CourseService {
 
       lessonsCreated = lessonResponse.result as ILessonCreate[];
 
-      // Puedes retornar lo que necesites aquí
       const response: Partial<ICourseCreate> = {
         lessonsAssociated: lessonsCreated,
       };
@@ -266,7 +263,6 @@ export default class CourseService {
         response
       );
     } catch (error: any) {
-      // Maneja el error según sea necesario
       throw error;
     }
   }
