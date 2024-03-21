@@ -1,7 +1,7 @@
 import fs from "fs";
-import path from "path";
 import {Sequelize, DataTypes} from "sequelize";
 import dotenv from "dotenv";
+import path from "path";
 dotenv.config();
 
 const basename = path.basename(__filename);
@@ -26,11 +26,12 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach((file) => {
-    const model = require(path.join(__dirname, file)).default(
-      sequelize,
-      DataTypes
-    );
-    db[model.name] = model;
+    if (file.startsWith("index.")) {
+      return;
+    }
+    const model = require(path.join(__dirname, file)).default;
+    const modelInstance = model(sequelize, DataTypes);
+    db[modelInstance.name] = modelInstance;
   });
 
 Object.keys(db).forEach((modelName) => {
