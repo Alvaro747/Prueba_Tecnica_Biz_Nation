@@ -33,9 +33,7 @@ router.get("/:id", (req, res) => {
 });
 
 // Operación UPDATE
-router.patch("/:id", (req, res) => {
-  // Aquí iría la lógica para actualizar un elemento por su ID
-});
+router.patch("/:id", CourseController.update);
 
 // Operación DELETE
 router.delete("/:id", (req, res) => {
