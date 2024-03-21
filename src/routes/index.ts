@@ -1,13 +1,12 @@
-import express from "express";
+import express from 'express';
+import AuthRoutes from './auth/auth.routes';
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
+router.use('/auth', AuthRoutes);
 
 export default router;
+
 
 // create schema security component
 /**
