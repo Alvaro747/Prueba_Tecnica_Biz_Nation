@@ -50,8 +50,12 @@ router.patch(
 );
 
 // Operación DELETE
-router.delete("/:id", (req, res) => {
-  // Aquí iría la lógica para eliminar un elemento por su ID
-});
+router.delete(
+  "/",
+  verifyTokenMiddleware,
+  getUserRoleByEmailMiddleware,
+  VerifyUserRoleMiddleware([UserRole.ADMIN]),
+  CourseController.delete
+);
 
 export default router;
