@@ -87,10 +87,10 @@ export default class LessonService {
 
   static async delete(id: number) {
     try {
-      const findCourseProgress =
-        await LessonProgressService.findLessonCourseByLessonId(id);
+      const findLessonProgress =
+        await LessonProgressService.findLessonProgressByLessonId(id);
 
-      if (isValidateResponse(findCourseProgress)) {
+      if (isValidateResponse(findLessonProgress)) {
         return createResponseHttp<null>(
           400,
           "Error deleting lesson, lesson has progress",

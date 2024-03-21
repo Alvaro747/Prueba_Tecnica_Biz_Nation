@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {CourseService, LessonService} from "../../services/index";
-import {isValidateResponse} from "@/utils";
+import isValidateResponse from "../../utils/validate.responses";
 
 export default class CourseController {
   static async create(req: Request, res: Response) {
@@ -27,7 +27,6 @@ export default class CourseController {
 
   static async delete(req: Request, res: Response) {
     const {courseId, lessonId} = req.query;
-    let response = [];
 
     if (!courseId && !lessonId) {
       res.status(400).json({
@@ -39,18 +38,23 @@ export default class CourseController {
     if (courseId) {
       const idNumber = parseInt(courseId as string);
       const responseCourse = await CourseService.delete(idNumber);
+
       if (!isValidateResponse(responseCourse)) {
         return res.status(responseCourse?.status || 201).json(responseCourse);
       }
-      response.push(responseCourse.result);
-    }
-/* 
-    if (lessonId) {
-      const idNumber = parseInt(lessonId as string);
-      response = await LessonService.delete(idNumber);
-      res.status(response?.status || 201).json(response);
     }
 
-    return res.status(response?.status || 201).json(response); */
+    if (lessonId) {
+      const idNumber = parseInt(lessonId as string);
+      const responseLesson = await LessonService.delete(idNumber);
+
+      if (!isValidateResponse(responseLesson)) {
+        return res.status(responseLesson?.status || 201).json(responseLesson);
+      }
+    }
+
+    return res
+      .status(201)
+      .json({response: null, message: "Deleted successfully.", success: true});
   }
 }

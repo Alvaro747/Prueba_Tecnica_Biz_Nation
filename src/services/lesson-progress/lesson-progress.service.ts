@@ -143,16 +143,16 @@ export default class LessonProgressService {
     }
   }
 
-  static async findLessonCourseByLessonId(lessonId: number) {
+  static async findLessonProgressByLessonId(lessonId: number) {
     try {
       const response = await Repository.CourseProgressModel.findAll({
-        where: {lessonId},
+        where: {id: lessonId},
       });
 
       if (!response || response.length === 0) {
         return createResponseHttp<null>(
           400,
-          "Error finding progress course",
+          "Error finding progress lesson",
           false,
           null
         );
