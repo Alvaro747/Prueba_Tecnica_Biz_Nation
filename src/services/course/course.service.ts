@@ -1,5 +1,10 @@
 import Repository from "../../models";
-import {ICourseCreate, ILessonCreate} from "../../interfaces/index";
+import {
+  IAddLessons,
+  ICourseCreate,
+  ILessonCreate,
+  IResponseHttp,
+} from "../../interfaces/index";
 import {createResponseHttp} from "../../utils/create-response-http";
 import LessonService from "../lesson/lesson.service";
 import isValidateResponse from "../../utils/validate.responses";
@@ -31,13 +36,17 @@ export default class CourseService {
           }
         ) as ILessonCreate[];
 
-        const lessonResponse: ILessonCreate[] = (await LessonService.create(
+        const lessonResponse = (await LessonService.create(
           addCourseIdToLessons
-        )) as ILessonCreate[];
+        )) as IResponseHttp<ILessonCreate[] | null>;
+
+        if (!isValidateResponse(lessonResponse)) {
+          return lessonResponse;
+        }
 
         const response: ICourseCreate = {
           ...course,
-          lessonsAssociated: lessonResponse,
+          lessonsAssociated: lessonResponse.result as ILessonCreate[],
         };
 
         return createResponseHttp<ICourseCreate>(
@@ -98,14 +107,11 @@ export default class CourseService {
           lessonUpdated.push(lessonResponse.result as ILessonCreate);
         }
       }
-      const [numberOfAffectedRows] = await Repository.CourseModel.update(
-        data,
-        {
-          where: {
-            id,
-          },
-        }
-      );
+      const [numberOfAffectedRows] = await Repository.CourseModel.update(data, {
+        where: {
+          id,
+        },
+      });
 
       if (!numberOfAffectedRows) {
         return createResponseHttp<null>(
@@ -134,6 +140,52 @@ export default class CourseService {
       );
     } catch (error: any) {
       return createResponseHttp<null>(500, error.message, false, null);
+    }
+  }
+
+  static async addLessons(data: IAddLessons) {
+    try {
+        
+      let lessonsCreated: ILessonCreate[] = [] as ILessonCreate[];
+      // Iterar sobre el array de datos
+      for (const lesson of data.addLessons) {
+        const id = lesson.courseId as number;
+        delete lesson.id;
+
+        if (!id) {
+          return createResponseHttp<null>(
+            400,
+            "Error adding lessons, courseId is required",
+            false,
+            null
+          );
+        }
+      }
+
+      const lessonResponse = (await LessonService.create(
+        data.addLessons
+      )) as IResponseHttp<ILessonCreate[] | null>;
+
+      if (!isValidateResponse(lessonResponse)) {
+        return lessonResponse;
+      }
+
+      lessonsCreated = lessonResponse.result as ILessonCreate[];
+
+      // Puedes retornar lo que necesites aquí
+      const response: Partial<ICourseCreate> = {
+        lessonsAssociated: lessonsCreated,
+      };
+
+      return createResponseHttp<Partial<ICourseCreate>>(
+        201,
+        "course and lessons created successfully",
+        true,
+        response
+      );
+    } catch (error: any) {
+      // Maneja el error según sea necesario
+      throw error;
     }
   }
 

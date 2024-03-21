@@ -32,7 +32,12 @@ export default class LessonService {
         lessons.push(lesson.dataValues);
       }
 
-      return lessons;
+      return createResponseHttp<ILessonCreate[]>(
+        201,
+        "Lesson created",
+        true,
+        lessons
+      );
     } catch (error: any) {
       throw error;
     }

@@ -32,8 +32,16 @@ router.get("/:id", (req, res) => {
   // Aquí iría la lógica para obtener un elemento por su ID
 });
 
+router.post("/add-lessons", CourseController.addLessons);
+
 // Operación UPDATE
-router.patch("/:id", CourseController.update);
+router.patch(
+  "/:id",
+  verifyTokenMiddleware,
+  getUserRoleByEmailMiddleware,
+  VerifyUserRoleMiddleware([UserRole.ADMIN]),
+  CourseController.update
+);
 
 // Operación DELETE
 router.delete("/:id", (req, res) => {
