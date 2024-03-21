@@ -1,19 +1,64 @@
-import repository from "../../models";
+import jwt, {Secret} from "jsonwebtoken";
 
+import repository from "../../models";
 import {
+  ILoginResponse,
   IRegistrationResponse,
   IResponseHttp,
+  IUserLogin,
   IUserRegister,
 } from "../../interfaces/index";
-import {encryptPassword} from "../../utils/generator.util";
+import {comparePasswords, encryptPassword} from "../../utils/generator.util";
 import {createResponseHttp} from "../../utils/create-response-http";
-import {RegistrationResponseDto} from "../../dtos/index";
+import {LoginResponseDto, RegistrationResponseDto} from "../../dtos/index";
+import {PayloadTokenType} from "../../types/payload-token.type";
+
 /**
  * Service class for handling auth operations such as register and login
  */
 export default class AuthService {
-  static async login(data: any) {
-    return {status: 200, message: "Login successful"};
+  static async login(data: IUserLogin) {
+    try {
+      const validateUser = await repository.UserModel.findOne({
+        where: {email: data.email},
+      });
+      if (!validateUser) {
+        return createResponseHttp<null>(404, "User not found", false, null);
+      }
+
+      const user = validateUser?.dataValues;
+
+      const isPasswordValid = await comparePasswords(
+        data.password,
+        user.password
+      );
+
+      if (!isPasswordValid) {
+        return createResponseHttp<null>(401, "Invalid password", false, null);
+      }
+
+      const payload: PayloadTokenType = {
+        email: user.email,
+        fullName: user.fullName,
+        role: user.role,
+      };
+
+      const token = this.getTocken(payload);
+
+      const response = new LoginResponseDto({
+        ...user,
+        token,
+      } as ILoginResponse).getAtributes();
+
+      return createResponseHttp<ILoginResponse>(
+        200,
+        "User logged in successfully",
+        true,
+        response
+      );
+    } catch (error: any) {
+      return createResponseHttp<null>(500, error.message, false, null);
+    }
   }
 
   static async register(
@@ -43,5 +88,13 @@ export default class AuthService {
         messagesError
       );
     }
+  }
+
+  private static getTocken(payload: PayloadTokenType): string {
+    const secretKey: Secret = process.env.JWT_SECRET || "";
+    const token = jwt.sign(payload, secretKey, {
+      expiresIn: process.env.EXPIRES_IN,
+    });
+    return token;
   }
 }
