@@ -17,6 +17,7 @@ import IDecodedToken from "./auth/decode-token.interface";
 
 import ICourseCreate from "./course/create-course.interface";
 import ILessonCreate from "./lesson/create-lesson.interface"
+import IAddLessons from "./lesson/add-lessons.interface"
 
 export {
   IExpress,
@@ -37,5 +38,6 @@ export {
   IDecodedToken,
 
   ICourseCreate,
-  ILessonCreate
+  ILessonCreate,
+  IAddLessons
 };
