@@ -2,6 +2,7 @@ import Repository from "../../models";
 import {ICourseCreate, ILessonCreate} from "../../interfaces/index";
 import {createResponseHttp} from "../../utils/create-response-http";
 import LessonService from "../lesson/lesson.service";
+import isValidateResponse from "../../utils/validate.responses";
 
 export default class CourseService {
   static async create(data: ICourseCreate) {
@@ -67,14 +68,54 @@ export default class CourseService {
     }
   }
 
-  static async update(id: string, data: Partial<ICourseCreate>) {
+  static async update(id: number, data: Partial<ICourseCreate>) {
     try {
-      const response = await Repository.UserModel.findByIdAndUpdate(id, data, {
-        new: true,
-      });
-      return response; // Puedes retornar lo que necesites aquí
+      const lessonUpdated: ILessonCreate[] = [];
+      const lessonsAssociated = data.lessonsAssociated as ILessonCreate[];
+
+      if (data.lessonsAssociated) {
+        const validationId = this.IsvalidationIdLesson(lessonsAssociated);
+        if (!validationId) {
+          return createResponseHttp<null>(
+            400,
+            "Error updating course, lesson id is required",
+            false,
+            null
+          );
+        }
+
+        for (const lesson of lessonsAssociated) {
+          const lessonResponse = await LessonService.update(
+            lesson.id as number,
+            lesson
+          );
+          if (!isValidateResponse(lessonResponse)) {
+            return lessonResponse;
+          }
+          lessonUpdated.push(lessonResponse.result as ILessonCreate);
+        }
+      }
+      const updateCourse = await Repository.CourseModel.update(
+        {data},
+        {
+          where: {
+            id,
+          },
+        }
+      );
+
+      const response: Partial<ICourseCreate> = {
+        ...updateCourse,
+        lessonsAssociated: lessonUpdated,
+      };
+      return createResponseHttp<ICourseCreate>(
+        201,
+        "course updated successfully",
+        true,
+        response
+      );
     } catch (error: any) {
-      throw error; // Maneja el error según sea necesario
+      return createResponseHttp<null>(500, error.message, false, null);
     }
   }
 
@@ -85,5 +126,19 @@ export default class CourseService {
     } catch (error: any) {
       throw error; // Maneja el error según sea necesario
     }
+  }
+
+  private static IsvalidationIdLesson(
+    lessonsAssociated: ILessonCreate[]
+  ): boolean {
+    let isValid: boolean = true;
+    for (const lesson of lessonsAssociated) {
+      if (!lesson.id) {
+        isValid = false;
+        return isValid;
+      }
+    }
+
+    return isValid;
   }
 }

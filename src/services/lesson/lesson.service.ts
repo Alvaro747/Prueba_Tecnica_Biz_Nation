@@ -1,6 +1,6 @@
 import Repository from "../../models";
 import {createResponseHttp} from "../../utils/create-response-http";
-import { ILessonCreate } from "../../interfaces/index";
+import {ILessonCreate} from "../../interfaces/index";
 
 export default class LessonService {
   static async create(data: ILessonCreate | ILessonCreate[]) {
@@ -38,16 +38,43 @@ export default class LessonService {
     }
   }
 
-  static async update(lessonId: string, lessonData: any) {
+  static async update(lessonId: number, lessonData: Partial<ILessonCreate>) {
     try {
-      const lesson = await Repository.LessonModel.findByIdAndUpdate(
-        lessonId,
+      let updatedLesson = {
+        dataValues: {},
+      };
+
+      const [numberOfAffectedRows] = await Repository.LessonModel.update(
         lessonData,
-        {new: true}
+        {
+          where: {id: lessonId},
+        }
       );
-      return lesson;
+
+      if (!numberOfAffectedRows) {
+        return createResponseHttp<null>(
+          400,
+          "Error updating lesson",
+          false,
+          null
+        );
+      }
+
+      if (numberOfAffectedRows > 0) {
+        // Si la actualización tuvo éxito, obtener el registro actualizado
+        updatedLesson = await Repository.LessonModel.findOne({
+          where: {id: lessonId},
+        });
+      }
+
+      return createResponseHttp<ILessonCreate>(
+        201,
+        "Lesson updated successfully",
+        true,
+        updatedLesson.dataValues
+      );
     } catch (error: any) {
-      throw error;
+      return createResponseHttp<null>(500, error.message, false, null);
     }
   }
 
